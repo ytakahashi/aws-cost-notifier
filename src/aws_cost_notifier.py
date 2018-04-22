@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
+
 import os
 import boto3
 from slackweb import slackweb
 from datetime import datetime, timedelta
 
 CURRENT_DATE = datetime.utcnow()
-print(CURRENT_DATE)
-
 SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL")
 
 
@@ -21,7 +20,7 @@ def lambda_handler(event, context):
     date = metric_statistics_response['Datapoints'][0]['Timestamp'].strftime('%Y/%m/%d')
     caller_account = get_account_id(sts)
 
-    send(caller_account, date, cost)
+    send_message(caller_account, date, cost)
 
 
 def get_account_id(client):
@@ -29,7 +28,7 @@ def get_account_id(client):
     return caller_identity.get("Account")
 
 
-def send(account_id, date, cost):
+def send_message(account_id, date, cost):
     attachment = {"title": "Cost of AWS (account: {})".format(account_id),
                   "text": "{} -> ${}".format(date, cost),
                   "color": notification_color(cost),

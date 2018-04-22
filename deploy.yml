@@ -20,7 +20,7 @@ Globals:
         SLACK_WEBHOOK_URL: !Ref SlackWebhookUrl
 
 Resources:
-  CostCheckLambda1:
+  CostCheckFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: lambda_package.zip
