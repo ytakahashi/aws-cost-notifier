@@ -42,7 +42,7 @@ jobs:
       - run:
           name: run tests
           command: 
-            nosetests -c .noserc
+            pipenv run nosetests -c .noserc
 
       - store_test_results:
           path: cover
