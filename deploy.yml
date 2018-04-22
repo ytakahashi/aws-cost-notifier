@@ -1,0 +1,34 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AWS SAM file to create lambda function.
+
+Parameters:
+  IAMRole:
+    Type: String
+    Description: iam role arn
+  SlackWebhookUrl:
+    Type: String
+    Description: slack incoming webhook url
+
+Globals:
+  Function:
+    Runtime: python3.6
+    Timeout: 10
+    MemorySize: 128
+    Environment:
+      Variables:
+        SLACK_WEBHOOK_URL: !Ref SlackWebhookUrl
+
+Resources:
+  CostCheckLambda1:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda_package.zip
+      Handler: aws_cost_notifier.lambda_handler
+      Role: !Ref IAMRole
+
+      Events:
+        Timer:
+          Type: Schedule
+          Properties:
+            Schedule: cron(0 0 * * ? *)
