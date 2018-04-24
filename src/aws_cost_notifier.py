@@ -16,11 +16,25 @@ def lambda_handler(event, context):
 
     metric_statistics_response = get_metric_statistics(cloudwatch)
 
-    cost = metric_statistics_response['Datapoints'][0]['Maximum']
-    date = metric_statistics_response['Datapoints'][0]['Timestamp'].strftime('%Y/%m/%d')
+    cost, date = handle_cloudwatch_response(metric_statistics_response)
+
     caller_account = get_account_id(sts)
 
     send_message(caller_account, date, cost)
+
+
+def handle_cloudwatch_response(metric_statistics_response):
+    statistics = metric_statistics_response['Datapoints']
+
+    if not statistics:
+        raise ValueError("Could not fetch cloudwatch metric statistics")
+
+    sorted_statistics = sorted(statistics, key=lambda s: s['Timestamp'], reverse=True)
+
+    cost = sorted_statistics[0]['Maximum']
+    date = sorted_statistics[0]['Timestamp'].strftime('%Y/%m/%d')
+
+    return cost, date
 
 
 def get_account_id(client):
@@ -29,8 +43,8 @@ def get_account_id(client):
 
 
 def send_message(account_id, date, cost):
-    attachment = {"title": "Cost of AWS (account: {})".format(account_id),
-                  "text": "{} -> ${}".format(date, cost),
+    attachment = {"title": f"Cost of AWS (account: {account_id})",
+                  "text": f"{date} -> ${cost}",
                   "color": notification_color(cost),
                   "mrkdwn_in": ["text", "pretext"]}
 
