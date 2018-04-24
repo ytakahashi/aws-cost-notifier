@@ -11,9 +11,7 @@ from src import aws_cost_notifier as sut
 class TestLambdaHandler(TestCase):
 
     def test_normal_lambda_handler(self):
-
         with patch('src.aws_cost_notifier.boto3'):
-
             sut.get_metric_statistics = MagicMock()
             sut.handle_cloudwatch_response = MagicMock(return_value=("2018/04/01", 0.0))
             sut.get_account_id = MagicMock(return_value=23456)
@@ -94,7 +92,6 @@ class TestNotificationColor(TestCase):
 class TestGetMetricStatistics(TestCase):
 
     def test_get_metric_statistics(self):
-
         mock_client = MagicMock()
 
         sut.get_metric_statistics(mock_client)

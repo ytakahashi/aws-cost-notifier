@@ -43,8 +43,8 @@ def get_account_id(client):
 
 
 def send_message(account_id, date, cost):
-    attachment = {"title": "Cost of AWS (account: {})".format(account_id),
-                  "text": "{} -> ${}".format(date, cost),
+    attachment = {"title": f"Cost of AWS (account: {account_id})",
+                  "text": f"{date} -> ${cost}",
                   "color": notification_color(cost),
                   "mrkdwn_in": ["text", "pretext"]}
 
