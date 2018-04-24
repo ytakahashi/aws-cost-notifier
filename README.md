@@ -9,21 +9,21 @@ AWS lambda function to check the cost and send a message to Slack.
 
 This repository contains followings:
 - lambda function 
-  - checks AWS cloudwatch by calling [get-metric-statistics API](https://docs.aws.amazon.com/cli/latest/reference/cloudwatch/get-metric-statistics.html)
+  - checks AWS cloudwatch by calling [get-metric-statistics API](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_GetMetricStatistics.html)
   - notifies the result via slack
 
 - packaging script (Makefile)
-  - compresses a lambda function script and is dependent modules in a zip file
+  - compresses a python script and its dependent modules in a zip file
 
 - deploy script ([AWS SAM](https://github.com/awslabs/serverless-application-model))
-  - deploys a zip file to AWS Lambda and creates an event to trigger the Lambda function
+  - deploys a zip file to AWS Lambda and creates an event to trigger the Lambda function using AWS cloudformation
 
 
 ## Requirement
 
 ### Lambda function
 
-#### environment
+#### Environment
 
 - Python version >= 3.6
 - Pipenv 
@@ -41,7 +41,7 @@ When running on AWS Lambda, a role attached to the lambda function should have f
 
 ### Deploy script
 
-#### environment
+#### Environment
 
 - aws cli
 
@@ -65,7 +65,7 @@ Run the command below to build script.
 pipenv install -d
 ```
 
-## Usage
+## Deploy
 
 Lambda function is created by following steps.
 
@@ -92,7 +92,7 @@ aws cloudformation package [ --profile PROFILE ] --template-file deploy.yml \
 aws cloudformation deploy [ --profile PROFILE ] --template-file ./deploy-output.yml \
 --stack-name CFN_STACK_NAME \
 --parameter-overrides \
-IAMRole='ROLE_NAME_ATTACHED_TO_LAMBDA_FUNCTION' \
+IAMRole='LAMBDA_FUNCTION_ROLE' \
 SlackWebhookUrl='SLACK_WEBHOOK_URL'
 ```
 - `PROFILE`: if you use named profile stored in the config and credentials files, specify the profile name
