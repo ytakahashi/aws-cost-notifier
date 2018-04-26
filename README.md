@@ -8,7 +8,7 @@ AWS lambda function to check the cost and send a message to Slack.
 ## Description
 
 This repository contains followings:
-- lambda function 
+- lambda function (python 3.6)
   - checks AWS cloudwatch by calling [get-metric-statistics API](https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_GetMetricStatistics.html)
   - notifies the result via slack
 
@@ -59,7 +59,7 @@ When running on AWS Lambda, a role attached to the lambda function should have f
 
 ## Install
 
-Run the command below to build script.
+Run the command below to use script.
 
 ```Console
 pipenv install -d
