@@ -2,8 +2,6 @@ ZIP_FILE_NAME := lambda_package.zip
 SOURCE_DIRECTORY := ./src
 TMP_DIRECTORY := ./tmp_package
 
-S3_BUCKET_NAME = cost-check-lambda
-
 .DEFAULT_GOAL := package
 
 package:
