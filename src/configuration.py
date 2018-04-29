@@ -2,7 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import os
+import yaml
 from datetime import datetime
+
+DEFAULT_CONF_PATH = f"{os.path.dirname(os.path.abspath(__file__))}/resource/default.yml"
 
 ENV_KEY_WEBHOOK_URL = "SLACK_WEBHOOK_URL"
 
@@ -30,6 +33,12 @@ class Configuration:
 
         self.__called_date = datetime.utcnow()
 
+        with open(DEFAULT_CONF_PATH) as file:
+            default_config = yaml.load(file)
+
+        self.__slack_config = default_config["slack"]
+        self.__cloudwatch_config = default_config["slack"]
+
     @property
     def url(self):
         pass
@@ -45,7 +54,7 @@ class Configuration:
     @property
     def icon(self):
         if self.__icon is None:
-            return ":moneybag:"
+            return self.__slack_config.get("icon")
         else:
             return self.__icon
 
@@ -64,7 +73,7 @@ class Configuration:
     @property
     def bot_name(self):
         if self.__bot_name is None:
-            return "aws cost"
+            return self.__slack_config.get("bot_name")
         else:
             return self.__bot_name
 
@@ -75,7 +84,7 @@ class Configuration:
     @property
     def threshold_good(self):
         if self.__threshold_good is None:
-            return 5.0
+            return self.__cloudwatch_config.get("threshold_good")
         else:
             return int(self.__threshold_good)
 
@@ -86,7 +95,7 @@ class Configuration:
     @property
     def threshold_warn(self):
         if self.__threshold_warn is None:
-            return 10.0
+            return self.__cloudwatch_config.get("threshold_warn")
         else:
             return int(self.__threshold_warn)
 

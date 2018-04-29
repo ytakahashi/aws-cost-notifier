@@ -1,0 +1,7 @@
+slack:
+  icon: ":moneybag:"
+  bot_name: "aws cost bot"
+
+cloudwatch:
+  threshold_good: 5.0
+  threshold_warn: 15.0

@@ -6,7 +6,7 @@ TMP_DIRECTORY := ./tmp_package
 
 package:
 	@ cp -r $(SOURCE_DIRECTORY) $(TMP_DIRECTORY)
-	# @ cd $(TMP_DIRECTORY); pip install `pipenv lock -r` -t ./
+	@ cd $(TMP_DIRECTORY); pip install `pipenv lock -r` -t ./
 	@ cd $(TMP_DIRECTORY); zip -r ./$(ZIP_FILE_NAME) .
 	@ mv $(TMP_DIRECTORY)/$(ZIP_FILE_NAME) ./
 	@ rm -fr $(TMP_DIRECTORY)
