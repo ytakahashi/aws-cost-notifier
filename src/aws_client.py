@@ -33,6 +33,7 @@ class CloudwatchClient:
             StartTime=date - timedelta(days=1),
             EndTime=date,
             Period=86400,
-            Statistics=['Maximum'])
+            Statistics=['Maximum']
+        )
         return metric_statistics_response
 

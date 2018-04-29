@@ -49,7 +49,7 @@ class Configuration:
 
     @url.setter
     def url(self, value):
-        raise ValueError('åThis value cannot be updated.')
+        raise ValueError('This value cannot be updated.')
 
     @property
     def icon(self):

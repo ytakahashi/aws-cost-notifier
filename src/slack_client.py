@@ -17,7 +17,7 @@ class Slack:
         self.name = name
 
     def create_payload(self, account_id, date, cost, color):
-        obj = {
+        payload = {
             "username": f"{self.name}",
             "icon_emoji": f"{self.icon}",
             "attachments": [
@@ -31,9 +31,9 @@ class Slack:
         }
 
         if self.channel is not None:
-            obj["channel"] = self.channel
+            payload["channel"] = self.channel
 
-        return obj
+        return payload
 
     def send_message(self, payload):
         client = SlackClient(self.url)
