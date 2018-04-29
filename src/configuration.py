@@ -37,7 +37,7 @@ class Configuration:
             default_config = yaml.load(file)
 
         self.__slack_config = default_config["slack"]
-        self.__cloudwatch_config = default_config["slack"]
+        self.__cloudwatch_config = default_config["cloudwatch"]
 
     @property
     def url(self):

@@ -18,10 +18,21 @@ def lambda_handler(event, context):
 
     caller_account = sts.get_account_id()
 
+    color = notification_color(cost, conf.threshold_good, conf.threshold_warn)
+
     slack = Slack(conf.url, conf.icon, conf.channel, conf.bot_name)
-    payload = slack.create_payload(caller_account, date, cost)
+    payload = slack.create_payload(caller_account, date, cost, color)
 
     slack.send_message(payload)
+
+
+def notification_color(cost, threshold_good, threshold_warn):
+    if cost <= threshold_good:
+        return "good"
+    elif cost <= threshold_warn:
+        return "warning"
+    else:
+        return "danger"
 
 
 def handle_cloudwatch_response(metric_statistics_response):

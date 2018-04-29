@@ -16,16 +16,7 @@ class Slack:
         self.channel = channel
         self.name = name
 
-    @staticmethod
-    def notification_color(cost):
-        if cost <= 0.0:
-            return "good"
-        elif cost <= 1.0:
-            return "warning"
-        else:
-            return "danger"
-
-    def create_payload(self, account_id, date, cost):
+    def create_payload(self, account_id, date, cost, color):
         obj = {
             "username": f"{self.name}",
             "icon_emoji": f"{self.icon}",
@@ -33,7 +24,7 @@ class Slack:
                 {
                     "title": f"Cost of AWS (account: {account_id})",
                     "text": f"{date} -> ${cost}",
-                    "color": self.notification_color(cost),
+                    "color": color,
                     "mrkdwn_in": ["text", "pretext"]
                 }
             ]
