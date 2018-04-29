@@ -86,7 +86,7 @@ class Configuration:
         if self.__threshold_good is None:
             return self.__cloudwatch_config.get("threshold_good")
         else:
-            return int(self.__threshold_good)
+            return float(self.__threshold_good)
 
     @threshold_good.setter
     def threshold_good(self, value):
@@ -97,7 +97,7 @@ class Configuration:
         if self.__threshold_warn is None:
             return self.__cloudwatch_config.get("threshold_warn")
         else:
-            return int(self.__threshold_warn)
+            return float(self.__threshold_warn)
 
     @threshold_warn.setter
     def threshold_warn(self, value):

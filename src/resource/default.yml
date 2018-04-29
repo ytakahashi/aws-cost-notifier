@@ -1,6 +1,6 @@
 slack:
   icon: ":moneybag:"
-  bot_name: "aws cost bot"
+  bot_name: "aws cost report"
 
 cloudwatch:
   threshold_good: 5.0
