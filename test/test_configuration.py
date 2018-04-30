@@ -75,7 +75,7 @@ class TestConfiguration(TestCase):
         eq_(conf.url, "url")
         eq_(conf.icon, ":moneybag:")
         eq_(conf.channel, None)
-        eq_(conf.bot_name, "aws cost bot")
+        eq_(conf.bot_name, "aws cost report")
         eq_(conf.threshold_good, 5.0)
         eq_(conf.threshold_warn, 15.0)
         eq_(conf.called_date, datetime(2018, 4, 21))
