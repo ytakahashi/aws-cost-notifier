@@ -1,26 +1,38 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-import os
-import boto3
-from slackweb import slackweb
-from datetime import datetime, timedelta
-
-CURRENT_DATE = datetime.utcnow()
-SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL")
+from aws_client import CloudwatchClient
+from aws_client import StsClient
+from slack_client import Slack
+from configuration import Configuration
 
 
 def lambda_handler(event, context):
-    cloudwatch = boto3.client('cloudwatch', region_name='us-east-1')
-    sts = boto3.client('sts')
+    cloudwatch = CloudwatchClient()
+    sts = StsClient()
+    conf = Configuration()
 
-    metric_statistics_response = get_metric_statistics(cloudwatch)
+    metric_statistics_response = cloudwatch.get_metric_statistics(conf.called_date)
 
     cost, date = handle_cloudwatch_response(metric_statistics_response)
 
-    caller_account = get_account_id(sts)
+    caller_account = sts.get_account_id()
 
-    send_message(caller_account, date, cost)
+    color = notification_color(cost, conf.threshold_good, conf.threshold_warn)
+
+    slack = Slack(conf.url, conf.icon, conf.channel, conf.bot_name)
+    payload = slack.create_payload(caller_account, date, cost, color)
+
+    slack.send_message(payload)
+
+
+def notification_color(cost, threshold_good, threshold_warn):
+    if cost <= threshold_good:
+        return "good"
+    elif cost <= threshold_warn:
+        return "warning"
+    else:
+        return "danger"
 
 
 def handle_cloudwatch_response(metric_statistics_response):
@@ -35,48 +47,6 @@ def handle_cloudwatch_response(metric_statistics_response):
     date = sorted_statistics[0]['Timestamp'].strftime('%Y/%m/%d')
 
     return cost, date
-
-
-def get_account_id(client):
-    caller_identity = client.get_caller_identity()
-    return caller_identity.get("Account")
-
-
-def send_message(account_id, date, cost):
-    attachment = {"title": f"Cost of AWS (account: {account_id})",
-                  "text": f"{date} -> ${cost}",
-                  "color": notification_color(cost),
-                  "mrkdwn_in": ["text", "pretext"]}
-
-    attachments = [attachment]
-    slack = slackweb.Slack(url=SLACK_WEBHOOK_URL)
-    slack.notify(attachments=attachments)
-
-
-def notification_color(cost):
-    if cost <= 0.0:
-        return "good"
-    elif cost <= 1.0:
-        return "warning"
-    else:
-        return "danger"
-
-
-def get_metric_statistics(client):
-    metric_statistics_response = client.get_metric_statistics(
-        Namespace='AWS/Billing',
-        MetricName='EstimatedCharges',
-        Dimensions=[
-            {
-                'Name': 'Currency',
-                'Value': 'USD'
-            }
-        ],
-        StartTime=CURRENT_DATE - timedelta(days=1),
-        EndTime=CURRENT_DATE,
-        Period=86400,
-        Statistics=['Maximum'])
-    return metric_statistics_response
 
 
 if __name__ == "__main__":

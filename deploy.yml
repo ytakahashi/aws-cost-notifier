@@ -9,6 +9,25 @@ Parameters:
   SlackWebhookUrl:
     Type: String
     Description: slack incoming webhook url
+  SlackIcon:
+    Type: String
+    Default: ":moneybag:"
+    Description: slack bot icon emoji
+  SlackChannel:
+    Type: String
+    Description: slack channel
+  SlackBotName:
+    Type: String
+    Default: "aws cost report"
+    Description: slack bot name
+  NotifyThreasholdGood:
+    Type: Number
+    Default: 5.0
+    Description: threashold value to notify by "good" color
+  NotifyThreasholdWarn:
+    Type: Number
+    Default: 15.0
+    Description: threashold value to notify by "warn" color
 
 Globals:
   Function:
@@ -18,6 +37,11 @@ Globals:
     Environment:
       Variables:
         SLACK_WEBHOOK_URL: !Ref SlackWebhookUrl
+        SLACK_ICON: !Ref SlackIcon
+        SLACK_CHANNEL: !Ref SlackChannel
+        SLACK_BOT_NAME: !Ref SlackBotName
+        NOTIFY_THRESHOLD_GOOD: !Ref NotifyThreasholdGood
+        NOTIFY_THRESHOLD_WARN: !Ref NotifyThreasholdWarn
 
 Resources:
   CostCheckFunction:
